@@ -4,33 +4,37 @@ import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, 
 
 const Dashboard = () => {
     const [user, setUser] = useState([]);
-    const [showAddUser, setShowAddUser] = useState(false); // Control visibility of the add user form
-    const [newUser, setNewUser] = useState({ userId: '', firstName: '', lastName: '', email: '', status: 'Active' });
+    const [showAddUser, setShowAddUser] = useState(false);
+    const [newUser, setNewUser] = useState({ userId: '', firstName: '', lastName: '', email: '', status: 'A' });
     const [editUserId, setEditUserId] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [tabValue, setTabValue] = useState(0);
+
+    useEffect(() => {
+        setUser(Users); // Set initial user data from Users.js
+    }, []);
 
     const handleInputChange = (e, field) => {
         setNewUser({ ...newUser, [field]: e.target.value });
     };
 
     const handleAddUser = () => {
-        setShowAddUser(true); // Show the add user form
+        setShowAddUser(true);
     };
 
     const handleSaveNewUser = () => {
         if (newUser.userId && newUser.firstName && newUser.lastName && newUser.email) {
             setUser([...user, newUser]); // Add new user to the table
-            setNewUser({ userId: '', firstName: '', lastName: '', email: '', status: 'Active' }); // Reset the form
-            setShowAddUser(false); // Hide the add user form
+            setNewUser({ userId: '', firstName: '', lastName: '', email: '', status: 'Active' });
+            setShowAddUser(false);
         } else {
             alert('Please fill in all the fields.');
         }
     };
 
     const handleCancelNewUser = () => {
-        setShowAddUser(false); // Hide the add user form without saving
-        setNewUser({ userId: '', firstName: '', lastName: '', email: '', status: 'Active' }); // Reset the form
+        setShowAddUser(false);
+        setNewUser({ userId: '', firstName: '', lastName: '', email: '', status: 'A' });
     };
 
     const handleDelete = (userId) => {
@@ -51,40 +55,33 @@ const Dashboard = () => {
             u.lastName.toLowerCase().includes(searchTerm.toLowerCase());
 
         if (tabValue === 0) return matchesSearch; // All users
-        if (tabValue === 1) return matchesSearch && u.status === 'Active'; // Active users
-        if (tabValue === 2) return matchesSearch && u.status === 'Inactive'; // Inactive users
+        if (tabValue === 1) return matchesSearch && u.status === 'A'; // Active users
+        if (tabValue === 2) return matchesSearch && u.status === 'N'; // Inactive users
         return false;
     });
 
-    useEffect(() => {
-        setUser(Users); // Set initial user data from Users.js
-    }, []);
-
     return (
         <>
-       
             <div style={{ display: "flex", justifyContent: "center", margin: "20px" }}>
                 <Button variant="contained" color="primary" onClick={handleAddUser}>
                     Add User
                 </Button>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
-                <TextField
-                    label="Search Users"
-                    variant="outlined"
-                    value={searchTerm}
-                    onChange={handleSearch}
-                    style={{ width: '300px' }}
-                />
-            </div>
-          
-         
-            <Tabs value={tabValue} onChange={(event, newValue) => setTabValue(newValue)} centered>
-                <Tab label="All" />
-                <Tab label="Active" />
-                <Tab label="Inactive" />
-            </Tabs>
+                <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
+                    <TextField
+                        label="Search Users"
+                        variant="outlined"
+                        value={searchTerm}
+                        onChange={handleSearch}
+                        style={{ width: '300px' }}
+                    />
+                </div>
+                <Tabs value={tabValue} onChange={(event, newValue) => setTabValue(newValue)} centered>
+                    <Tab label="All" />
+                    <Tab label="Active" />
+                    <Tab label="Inactive" />
+                </Tabs>
             </div>
             <TableContainer component={Paper} sx={{ marginTop: 4 }}>
                 <Table aria-label="user table">
