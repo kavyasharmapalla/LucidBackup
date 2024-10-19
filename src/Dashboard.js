@@ -38,7 +38,7 @@ const Dashboard = () => {
     };
 
     const handleDelete = (userId) => {
-        if (window.confirm("Are you sure you want to deactivate this user?")) {
+        if (window.confirm(`Are you sure you want to deactivate the user with ID: ${userId}?`)) {
             const deactivateUser = user.map(item =>
                 item.userId === userId ? { ...item, status: 'N' } : item
             );
