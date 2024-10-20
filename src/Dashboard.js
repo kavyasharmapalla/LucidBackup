@@ -62,11 +62,7 @@ const Dashboard = () => {
 
     return (
         <>
-            <div style={{ display: "flex", justifyContent: "center", margin: "20px" }}>
-                <Button variant="contained" color="primary" onClick={handleAddUser}>
-                    Add User
-                </Button>
-            </div>
+            
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", justifyContent: "center", marginBottom: "20px" }}>
                     <TextField
@@ -83,14 +79,13 @@ const Dashboard = () => {
                     <Tab label="Inactive" />
                 </Tabs>
             </div>
-            <TableContainer component={Paper} sx={{ marginTop: 4 }}>
+            <TableContainer component={Paper} sx={{ marginTop: 8}}>
                 <Table aria-label="user table">
                     <TableHead>
                         <TableRow>
                             <TableCell><strong>UserId</strong></TableCell>
                             <TableCell><strong>First Name</strong></TableCell>
-                            <TableCell><strong>Last Name</strong></TableCell>
-                            <TableCell><strong>Email</strong></TableCell>
+                            <TableCell><strong>Last Name</strong></TableCell>                          
                             <TableCell><strong>Status</strong></TableCell>
                             <TableCell><strong>Actions</strong></TableCell>
                         </TableRow>
@@ -119,13 +114,7 @@ const Dashboard = () => {
                                         onChange={(e) => handleInputChange(e, 'lastName')}
                                     />
                                 </TableCell>
-                                <TableCell>
-                                    <TextField
-                                        placeholder="Email"
-                                        value={newUser.email}
-                                        onChange={(e) => handleInputChange(e, 'email')}
-                                    />
-                                </TableCell>
+                               
                                 <TableCell>
                                     <TextField
                                         placeholder="Status"
@@ -148,7 +137,7 @@ const Dashboard = () => {
                                 <TableCell>{user.userId}</TableCell>
                                 <TableCell>{user.firstName}</TableCell>
                                 <TableCell>{user.lastName}</TableCell>
-                                <TableCell>{user.email}</TableCell>
+                              
                                 <TableCell>{user.status}</TableCell>
                                 <TableCell>
                                     <Button variant="contained" color="primary" onClick={() => setEditUserId(user.userId)}>
@@ -162,6 +151,12 @@ const Dashboard = () => {
                         ))}
                     </TableBody>
                 </Table>
+
+                <div style={{ display: "flex", justifyContent: "center", margin: "20px" }}>
+                <Button variant="contained" color="primary" onClick={handleAddUser}>
+                    Add User
+                </Button>
+            </div>
             </TableContainer>
         </>
     );
