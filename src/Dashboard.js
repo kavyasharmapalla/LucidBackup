@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Users } from './Components/Users';
-import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Tab, TextField } from '@mui/material';
+import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Tab, TextField, TablePagination } from '@mui/material';
 
 const Dashboard = () => {
     const [user, setUser] = useState([]);
@@ -9,6 +9,8 @@ const Dashboard = () => {
     const [editUserId, setEditUserId] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [tabValue, setTabValue] = useState(0);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     useEffect(() => {
         const savedUsers = JSON.parse(localStorage.getItem('users')) || Users; 
         setUser(savedUsers); 
@@ -47,6 +49,15 @@ const Dashboard = () => {
         setNewUser({ userId: '', firstName: '', lastName: '', email: '', status: 'A' });
     };
 
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
     const handleDelete = (userId) => {
         if (window.confirm(`Are you sure you want to deactivate the user with ID: ${userId}?`)) {
             const deactivateUser = user.map(item =>
@@ -70,6 +81,9 @@ const Dashboard = () => {
         return false;
     });
 
+    const displayedUsers = filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage);
+
+
     return (
         <>
             
@@ -83,6 +97,15 @@ const Dashboard = () => {
                         style={{ width: '300px' }}
                     />
                 </div>
+                <TablePagination
+        component="div"
+        count={filteredUsers.length}
+        page={page}
+        onPageChange={handleChangePage}
+        rowsPerPage={rowsPerPage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+        rowsPerPageOptions={[10]} // Fixed to 3 rows per page
+    />
                 <Tabs value={tabValue} onChange={(event, newValue) => setTabValue(newValue)} centered>
                     <Tab label="All" />
                     <Tab label="Active" />
@@ -91,6 +114,9 @@ const Dashboard = () => {
             </div>
             <TableContainer component={Paper} sx={{ marginTop: 8}}>
                 <Table aria-label="user table">
+                <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '16px' }}>
+    
+</div>
                     <TableHead>
                         <TableRow>
                             <TableCell><strong>UserId</strong></TableCell>
@@ -141,7 +167,7 @@ const Dashboard = () => {
             </TableCell>
         </TableRow>
     )}
-    {filteredUsers.map((user, index) => (
+    {displayedUsers.map((user, index) => (
         <TableRow key={index}>
             <TableCell>{user.userId}</TableCell>
             <TableCell>{user.firstName}</TableCell>
