@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Users } from './Users';
+import { Users } from './Components/Users';
 import { Button, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Tab, TextField } from '@mui/material';
 
 const Dashboard = () => {
@@ -9,9 +9,13 @@ const Dashboard = () => {
     const [editUserId, setEditUserId] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [tabValue, setTabValue] = useState(0);
+    useEffect(() => {
+        const savedUsers = JSON.parse(localStorage.getItem('users')) || Users; 
+        setUser(savedUsers); 
+    }, []);
 
     useEffect(() => {
-        setUser(Users); // Set initial user data from Users.js
+        setUser(Users); 
     }, []);
 
     const handleInputChange = (e, field) => {
@@ -23,10 +27,16 @@ const Dashboard = () => {
     };
 
     const handleSaveNewUser = () => {
-        if (newUser.userId && newUser.firstName && newUser.lastName && newUser.email) {
-            setUser([...user, newUser]); // Add new user to the table
-            setNewUser({ userId: '', firstName: '', lastName: '', email: '', status: 'Active' });
+        if (newUser.userId && newUser.firstName && newUser.lastName) {
+            const isuser = user.some(existingUser => existingUser.userId === newUser.userId);
+            if(isuser){
+                alert("user already exists")
+            }
+            else{
+            setUser([...user, newUser]); 
+            setNewUser({ userId: '', firstName: '', lastName: '',  status: 'A' });
             setShowAddUser(false);
+            }
         } else {
             alert('Please fill in all the fields.');
         }
@@ -91,65 +101,64 @@ const Dashboard = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {showAddUser && (
-                            <TableRow>
-                                <TableCell>
-                                    <TextField
-                                        placeholder="UserId"
-                                        value={newUser.userId}
-                                        onChange={(e) => handleInputChange(e, 'userId')}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <TextField
-                                        placeholder="First Name"
-                                        value={newUser.firstName}
-                                        onChange={(e) => handleInputChange(e, 'firstName')}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <TextField
-                                        placeholder="Last Name"
-                                        value={newUser.lastName}
-                                        onChange={(e) => handleInputChange(e, 'lastName')}
-                                    />
-                                </TableCell>
-                               
-                                <TableCell>
-                                    <TextField
-                                        placeholder="Status"
-                                        value={newUser.status}
-                                        onChange={(e) => handleInputChange(e, 'status')}
-                                    />
-                                </TableCell>
-                                <TableCell>
-                                    <Button variant="contained" color="primary" onClick={handleSaveNewUser}>
-                                        Save
-                                    </Button>
-                                    <Button variant="contained" color="secondary" onClick={handleCancelNewUser} style={{ marginLeft: '10px' }}>
-                                        Cancel
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        )}
-                        {filteredUsers.map((user, index) => (
-                            <TableRow key={index}>
-                                <TableCell>{user.userId}</TableCell>
-                                <TableCell>{user.firstName}</TableCell>
-                                <TableCell>{user.lastName}</TableCell>
-                              
-                                <TableCell>{user.status}</TableCell>
-                                <TableCell>
-                                    <Button variant="contained" color="primary" onClick={() => setEditUserId(user.userId)}>
-                                        Update
-                                    </Button>
-                                    <Button variant="contained" color="secondary" onClick={() => handleDelete(user.userId)} style={{ marginLeft: '10px' }}>
-                                        Delete
-                                    </Button>
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
+    {showAddUser && (
+        <TableRow>
+            <TableCell>
+                <TextField
+                    placeholder="UserId"
+                    value={newUser.userId}
+                    onChange={(e) => handleInputChange(e, 'userId')}
+                />
+            </TableCell>
+            <TableCell>
+                <TextField
+                    placeholder="First Name"
+                    value={newUser.firstName}
+                    onChange={(e) => handleInputChange(e, 'firstName')}
+                />
+            </TableCell>
+            <TableCell>
+                <TextField
+                    placeholder="Last Name"
+                    value={newUser.lastName}
+                    onChange={(e) => handleInputChange(e, 'lastName')}
+                />
+            </TableCell>
+            <TableCell>
+                <TextField
+                    placeholder="Status"
+                    value={newUser.status}
+                    onChange={(e) => handleInputChange(e, 'status')}
+                />
+            </TableCell>
+            <TableCell>
+                <Button variant="contained" color="primary" onClick={handleSaveNewUser}>
+                    Save
+                </Button>
+                <Button variant="contained" color="secondary" onClick={handleCancelNewUser} style={{ marginLeft: '10px' }}>
+                    Cancel
+                </Button>
+            </TableCell>
+        </TableRow>
+    )}
+    {filteredUsers.map((user, index) => (
+        <TableRow key={index}>
+            <TableCell>{user.userId}</TableCell>
+            <TableCell>{user.firstName}</TableCell>
+            <TableCell>{user.lastName}</TableCell>
+            <TableCell>{user.status}</TableCell>
+            <TableCell>
+                <Button variant="contained" color="primary" onClick={() => setEditUserId(user.userId)}>
+                    Update
+                </Button>
+                <Button variant="contained" color="secondary" onClick={() => handleDelete(user.userId)} style={{ marginLeft: '10px' }}>
+                    Delete
+                </Button>
+            </TableCell>
+        </TableRow>
+    ))}
+</TableBody>
+
                 </Table>
 
                 <div style={{ display: "flex", justifyContent: "center", margin: "20px" }}>
