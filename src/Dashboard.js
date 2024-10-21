@@ -10,7 +10,7 @@ const Dashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [tabValue, setTabValue] = useState(0);
     const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(3);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
     useEffect(() => {
         const savedUsers = JSON.parse(localStorage.getItem('users')) || Users; 
         setUser(savedUsers); 
@@ -104,7 +104,7 @@ const Dashboard = () => {
         onPageChange={handleChangePage}
         rowsPerPage={rowsPerPage}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        rowsPerPageOptions={[3]} // Fixed to 3 rows per page
+        rowsPerPageOptions={[10]} 
     />
                 <Tabs value={tabValue} onChange={(event, newValue) => setTabValue(newValue)} centered>
                     <Tab label="All" />
