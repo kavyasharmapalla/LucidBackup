@@ -10,6 +10,7 @@ const Dashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [tabValue, setTabValue] = useState(0);
     const [page, setPage] = useState(0);
+   // const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     useEffect(() => {
         const savedUsers = JSON.parse(localStorage.getItem('users')) || Users; 
